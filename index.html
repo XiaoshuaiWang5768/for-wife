@@ -17,12 +17,78 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
             overflow: hidden;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, 
+                #667eea 0%, 
+                #764ba2 25%,
+                #f093fb 50%,
+                #4facfe 75%,
+                #667eea 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
             height: 100vh;
             width: 100vw;
             position: fixed;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* 背景装饰层 */
+        .bg-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 背景星星 */
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+            transform: translateZ(0);
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1) translateZ(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5) translateZ(0);
+            }
+        }
+
+        /* 浮动圆圈 */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: floatCircle 8s ease-in-out infinite;
+            transform: translateZ(0);
+        }
+
+        @keyframes floatCircle {
+            0%, 100% {
+                transform: translate(0, 0) scale(1) translateZ(0);
+            }
+            50% {
+                transform: translate(30px, -30px) scale(1.2) translateZ(0);
+            }
         }
 
         /* 背景爱心 - 移动端优化 */
@@ -38,14 +104,15 @@
         .heart {
             position: absolute;
             font-size: 28px;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.4);
             animation: float 5s linear infinite;
             transform: translateZ(0);
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
         }
 
         @keyframes float {
             0% {
-                transform: translateY(100vh) translateZ(0);
+                transform: translateY(100vh) rotate(0deg) translateZ(0);
                 opacity: 0;
             }
             10% {
@@ -55,7 +122,7 @@
                 opacity: 0.8;
             }
             100% {
-                transform: translateY(-50px) translateZ(0);
+                transform: translateY(-50px) rotate(180deg) translateZ(0);
                 opacity: 0;
             }
         }
@@ -95,15 +162,23 @@
 
         /* 弹窗卡片 - 手机端优化 */
         .modal-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 250, 0.98) 100%);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.95) 0%, 
+                rgba(255, 245, 250, 0.95) 50%,
+                rgba(255, 250, 250, 0.95) 100%);
             border-radius: 16px;
             padding: 18px 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.25),
+                0 0 20px rgba(255, 107, 157, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
             max-width: 240px;
             min-width: 180px;
             position: relative;
             border: 1.5px solid rgba(255, 255, 255, 0.9);
             transform: translateZ(0);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         /* 不同大小 - 手机优化 */
@@ -142,25 +217,37 @@
             font-size: 17px;
         }
 
-        /* 表情图标 - 简化动画 */
+        /* 表情图标 */
         .emoji-icon {
             font-size: 32px;
             text-align: center;
             margin-bottom: 10px;
             display: inline-block;
             transform: translateZ(0);
+            animation: emojiFloat 2s ease-in-out infinite;
+            filter: drop-shadow(0 2px 4px rgba(255, 107, 157, 0.3));
         }
 
         .modal-card.large .emoji-icon {
             font-size: 36px;
         }
 
-        /* 心形装饰 - 简化 */
+        @keyframes emojiFloat {
+            0%, 100% {
+                transform: translateY(0) translateZ(0);
+            }
+            50% {
+                transform: translateY(-5px) translateZ(0);
+            }
+        }
+
+        /* 心形装饰 */
         .heart-deco {
             position: absolute;
             font-size: 24px;
-            opacity: 0.1;
+            opacity: 0.15;
             pointer-events: none;
+            animation: heartPulse 2s ease-in-out infinite;
         }
 
         .heart-deco.top-left {
@@ -171,6 +258,18 @@
         .heart-deco.bottom-right {
             bottom: -8px;
             right: -8px;
+            animation-delay: 1s;
+        }
+
+        @keyframes heartPulse {
+            0%, 100% {
+                opacity: 0.15;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.25;
+                transform: scale(1.1);
+            }
         }
 
         /* 关闭按钮 */
@@ -210,6 +309,10 @@
     </style>
 </head>
 <body>
+    <!-- 背景装饰层 -->
+    <div class="bg-decoration" id="bgDecoration"></div>
+    
+    <!-- 背景爱心层 -->
     <div class="heart-bg" id="heartBg"></div>
 
     <script>
@@ -349,15 +452,45 @@
 
         const heartEmojis = ['❤️', '💕', '💖', '💗', '💓', '💝'];
         const heartBg = document.getElementById('heartBg');
+        const bgDecoration = document.getElementById('bgDecoration');
         
         // 对象池管理
         const modalPool = new Set();
         const heartPool = new Set();
+        const starPool = new Set();
 
         // 工具函数
         const random = (min, max) => Math.random() * (max - min) + min;
         const randomInt = (min, max) => Math.floor(random(min, max));
         const randomItem = (arr) => arr[randomInt(0, arr.length)];
+
+        // 创建背景星星
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = random(0, 100) + '%';
+            star.style.top = random(0, 100) + '%';
+            star.style.animationDelay = random(0, 3) + 's';
+            star.style.animationDuration = random(2, 4) + 's';
+            
+            bgDecoration.appendChild(star);
+            starPool.add(star);
+        }
+
+        // 创建浮动圆圈
+        function createCircle() {
+            const circle = document.createElement('div');
+            circle.className = 'circle';
+            const size = random(100, 200);
+            circle.style.width = size + 'px';
+            circle.style.height = size + 'px';
+            circle.style.left = random(-50, 100) + '%';
+            circle.style.top = random(-50, 100) + '%';
+            circle.style.animationDelay = random(0, 5) + 's';
+            circle.style.animationDuration = random(6, 10) + 's';
+            
+            bgDecoration.appendChild(circle);
+        }
 
         // 创建爱心
         function createHeart() {
@@ -368,7 +501,7 @@
             heart.textContent = randomItem(heartEmojis);
             heart.style.left = random(5, 95) + '%';
             heart.style.animationDuration = random(4, 6) + 's';
-            heart.style.fontSize = random(22, 32) + 'px';
+            heart.style.fontSize = random(24, 34) + 'px';
             
             heartPool.add(heart);
             heartBg.appendChild(heart);
@@ -469,6 +602,18 @@
 
         // 初始化
         window.addEventListener('load', () => {
+            // 创建背景星星（固定位置）
+            const starCount = isMobile ? 20 : 30;
+            for (let i = 0; i < starCount; i++) {
+                createStar();
+            }
+            
+            // 创建浮动圆圈
+            const circleCount = isMobile ? 3 : 5;
+            for (let i = 0; i < circleCount; i++) {
+                createCircle();
+            }
+            
             // 初始创建爱心
             for (let i = 0; i < 5; i++) {
                 setTimeout(createHeart, i * 200);
