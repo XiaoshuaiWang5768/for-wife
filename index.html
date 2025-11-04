@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>给最爱的你 ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease-in-out infinite;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* 背景爱心动画 */
+        .heart-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            color: rgba(255, 255, 255, 0.4);
+            animation: float 6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+            will-change: transform, opacity;
+            filter: drop-shadow(0 0 8px rgba(255, 107, 157, 0.4));
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(30px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 粒子光效 */
+        .sparkle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            will-change: transform, opacity;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        /* 雪花式弹窗卡片 */
+        .snow-modal {
+            position: fixed;
+            z-index: 1000;
+            pointer-events: auto;
+            will-change: transform, opacity;
+            animation: 
+                snowFallIn 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards,
+                floatGentle 3s cubic-bezier(0.45, 0, 0.55, 1) 0.5s infinite,
+                snowFallOut 0.6s cubic-bezier(0.6, 0, 0.8, 0.2) 2.4s forwards;
+        }
+
+        @keyframes snowFallIn {
+            0% {
+                transform: translateY(-100px) scale(0.4) rotate(-15deg);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes floatGentle {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-8px) scale(1.02);
+            }
+        }
+
+        @keyframes snowFallOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.6) rotate(10deg);
+            }
+        }
+
+        /* 弹窗内容卡片 */
+        .modal-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.95) 0%, 
+                rgba(255, 245, 245, 0.95) 100%);
+            border-radius: 24px;
+            padding: 20px 25px;
+            box-shadow: 
+                0 15px 45px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+                0 0 40px rgba(255, 107, 157, 0.2);
+            max-width: 280px;
+            min-width: 200px;
+            position: relative;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            will-change: box-shadow;
+            animation: cardGlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+        }
+
+        @keyframes cardGlow {
+            0% {
+                box-shadow: 
+                    0 15px 45px rgba(0, 0, 0, 0.3),
+                    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+                    0 0 30px rgba(255, 107, 157, 0.2);
+            }
+            100% {
+                box-shadow: 
+                    0 15px 45px rgba(0, 0, 0, 0.3),
+                    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+                    0 0 60px rgba(255, 107, 157, 0.5);
+            }
+        }
+
+        /* 不同大小的弹窗 */
+        .modal-card.small {
+            max-width: 220px;
+            padding: 16px 20px;
+        }
+
+        .modal-card.medium {
+            max-width: 280px;
+            padding: 20px 25px;
+        }
+
+        .modal-card.large {
+            max-width: 320px;
+            padding: 24px 30px;
+        }
+
+        /* 心形装饰 */
+        .heart-deco {
+            position: absolute;
+            font-size: 28px;
+            opacity: 0.12;
+            pointer-events: none;
+            will-change: transform;
+            animation: heartDecoFloat 4s ease-in-out infinite;
+        }
+
+        .heart-deco.top-left {
+            top: -12px;
+            left: -12px;
+        }
+
+        .heart-deco.bottom-right {
+            bottom: -12px;
+            right: -12px;
+            animation-delay: 2s;
+        }
+
+        @keyframes heartDecoFloat {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.15) rotate(5deg);
+            }
+        }
+
+        /* 情话文本 */
+        .love-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            text-align: center;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .modal-card.small .love-text {
+            font-size: 16px;
+        }
+
+        .modal-card.large .love-text {
+            font-size: 20px;
+        }
+
+        /* 表情图标 */
+        .emoji-icon {
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 12px;
+            display: inline-block;
+            will-change: transform;
+            animation: emojiFloat 2.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+            filter: drop-shadow(0 3px 6px rgba(255, 107, 157, 0.3));
+        }
+
+        @keyframes emojiFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-6px) rotate(-3deg) scale(1.05);
+            }
+            75% {
+                transform: translateY(-6px) rotate(3deg) scale(1.05);
+            }
+        }
+
+        /* 关闭按钮 */
+        .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(255, 107, 157, 0.15);
+            border: none;
+            font-size: 18px;
+            color: #ff6b9d;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            opacity: 0.5;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .close-btn:active {
+            opacity: 1;
+            background: rgba(255, 107, 157, 0.3);
+            transform: rotate(90deg) scale(0.9);
+        }
+
+        /* 性能优化 */
+        .snow-modal,
+        .heart,
+        .sparkle,
+        .emoji-icon,
+        .heart-deco {
+            transform: translateZ(0);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景飘落的爱心 -->
+    <div class="heart-bg" id="heartBg"></div>
+
+    <script>
+        'use strict';
+
+        // 简短情话数组（扩增到100+条）
+        const loveMessages = [
+            { text: '你是我生命中最美的意外', emoji: '💝' },
+            { text: '想和你一起看遍世间美景', emoji: '🌹' },
+            { text: '你的笑容是我最大的幸福', emoji: '😊' },
+            { text: '遇见你，是我最大的幸运', emoji: '🌟' },
+            { text: '想和你一起慢慢变老', emoji: '💑' },
+            { text: '你是我心中的唯一', emoji: '💖' },
+            { text: '每一天都想和你在一起', emoji: '💕' },
+            { text: '你是我生命中的光', emoji: '✨' },
+            { text: '想和你一起数星星', emoji: '⭐' },
+            { text: '你是我最珍贵的宝贝', emoji: '💎' },
+            { text: '想和你一起看日出日落', emoji: '🌅' },
+            { text: '你是我心中的小太阳', emoji: '☀️' },
+            { text: '想和你一起走过四季', emoji: '🌸' },
+            { text: '你是我最想守护的人', emoji: '🛡️' },
+            { text: '想和你一起品尝美食', emoji: '🍰' },
+            { text: '你是我生命中的彩虹', emoji: '🌈' },
+            { text: '想和你一起听音乐', emoji: '🎵' },
+            { text: '你是我心中的小公主', emoji: '👑' },
+            { text: '想和你一起看月亮', emoji: '🌙' },
+            { text: '你是我最温暖的港湾', emoji: '🏠' },
+            { text: '想和你一起做任何事情', emoji: '💗' },
+            { text: '你是我生命中的奇迹', emoji: '🎁' },
+            { text: '想和你一起看海', emoji: '🌊' },
+            { text: '你是我心中的白月光', emoji: '🌛' },
+            { text: '想和你一起分享快乐', emoji: '😄' },
+            { text: '你是我最想拥抱的人', emoji: '🤗' },
+            { text: '想和你一起创造回忆', emoji: '📸' },
+            { text: '你是我生命中的唯一', emoji: '💍' },
+            { text: '你是我最想珍惜的人', emoji: '💝' },
+            { text: '想和你一起看雪', emoji: '❄️' },
+            { text: '你是我心中的小星星', emoji: '⭐' },
+            { text: '想和你一起看花', emoji: '🌺' },
+            { text: '你是我生命中的礼物', emoji: '🎁' },
+            { text: '想和你一起度过每一天', emoji: '📅' },
+            { text: '你是我最想爱的人', emoji: '💕' },
+            { text: '想和你一起看云', emoji: '☁️' },
+            { text: '你是我心中的小天使', emoji: '👼' },
+            { text: '想和你一起许愿', emoji: '🌠' },
+            { text: '你是我生命中的全部', emoji: '💖' },
+            { text: '余生都想和你在一起', emoji: '💞' },
+            { text: '你让我的世界充满色彩', emoji: '🎨' },
+            { text: '想和你一起环游世界', emoji: '🌍' },
+            { text: '你是我心中的宝藏', emoji: '💰' },
+            { text: '想和你一起看星空', emoji: '🌌' },
+            { text: '你是我最美的梦', emoji: '💭' },
+            { text: '想给你全世界的温柔', emoji: '🌷' },
+            { text: '你是我的小幸运', emoji: '🍀' },
+            { text: '想和你一起品茶聊天', emoji: '🍵' },
+            { text: '你是我心中的诗', emoji: '📝' },
+            { text: '想陪你看尽春夏秋冬', emoji: '🍂' },
+            { text: '你的温柔是我的软肋', emoji: '💓' },
+            { text: '想和你一起去远方', emoji: '🚗' },
+            { text: '你是我永远的心动', emoji: '💘' },
+            { text: '想和你一起漫步雨中', emoji: '🌧️' },
+            { text: '你是我今生的注定', emoji: '🔮' },
+            { text: '想和你一起放烟花', emoji: '🎆' },
+            { text: '你让我相信爱情', emoji: '💌' },
+            { text: '想和你一起跳舞', emoji: '💃' },
+            { text: '你是我心中的火焰', emoji: '🔥' },
+            { text: '想和你一起吹晚风', emoji: '🍃' },
+            { text: '你是我最美的相遇', emoji: '🦋' },
+            { text: '想和你一起看樱花', emoji: '🌸' },
+            { text: '你是我的心之所向', emoji: '🧭' },
+            { text: '想和你一起数花瓣', emoji: '🌼' },
+            { text: '你是我的终点也是起点', emoji: '🏁' },
+            { text: '想和你一起坐摩天轮', emoji: '🎡' },
+            { text: '你是我心中的旋律', emoji: '🎶' },
+            { text: '想和你一起去游乐场', emoji: '🎠' },
+            { text: '你是我的小确幸', emoji: '🎈' },
+            { text: '想和你一起看烟火', emoji: '🎇' },
+            { text: '你是我心中的蜜糖', emoji: '🍯' },
+            { text: '想和你一起吃冰淇淋', emoji: '🍦' },
+            { text: '你是我生命的甜蜜', emoji: '🍬' },
+            { text: '想和你一起过每个节日', emoji: '🎉' },
+            { text: '你是我的专属浪漫', emoji: '🎀' },
+            { text: '想和你一起看夕阳', emoji: '🌇' },
+            { text: '你是我心中的玫瑰', emoji: '🌹' },
+            { text: '想和你一起去海边', emoji: '🏖️' },
+            { text: '你是我的避风港', emoji: '⛵' },
+            { text: '想和你一起探险', emoji: '🗺️' },
+            { text: '你是我的唯一答案', emoji: '❓' },
+            { text: '想和你一起看电影', emoji: '🎬' },
+            { text: '你是我的灵魂伴侣', emoji: '👫' },
+            { text: '想和你一起拍照留念', emoji: '📷' },
+            { text: '你是我的最佳拍档', emoji: '🎭' },
+            { text: '想和你一起做早餐', emoji: '🍳' },
+            { text: '你是我的小可爱', emoji: '🐰' },
+            { text: '想和你一起养宠物', emoji: '🐱' },
+            { text: '你是我的开心果', emoji: '🍊' },
+            { text: '想和你一起采摘水果', emoji: '🍓' },
+            { text: '你是我的甜心宝贝', emoji: '🍒' },
+            { text: '想和你一起野餐', emoji: '🧺' },
+            { text: '你是我的小太阳', emoji: '🌞' },
+            { text: '想和你一起看流星雨', emoji: '☄️' },
+            { text: '你是我的星辰大海', emoji: '🌠' },
+            { text: '想和你一起数月亮', emoji: '🌝' },
+            { text: '你是我的月光宝盒', emoji: '📦' },
+            { text: '想和你一起放风筝', emoji: '🪁' },
+            { text: '你是我的春天', emoji: '🌱' },
+            { text: '想和你一起赏秋叶', emoji: '🍁' },
+            { text: '你是我的四季如春', emoji: '🌿' },
+            { text: '想和你一起堆雪人', emoji: '⛄' },
+            { text: '你是我的冬日暖阳', emoji: '🔆' },
+            { text: '想和你一起去滑雪', emoji: '🎿' },
+            { text: '你是我的永恒', emoji: '♾️' },
+            { text: '想和你一起看极光', emoji: '🌌' },
+            { text: '你是我的幸福密码', emoji: '🔐' },
+            { text: '想和你一起写日记', emoji: '📖' },
+            { text: '你是我的故事主角', emoji: '📚' },
+            { text: '想和你一起画画', emoji: '🖼️' },
+            { text: '你是我的艺术品', emoji: '🎨' },
+            { text: '想和你一起唱歌', emoji: '🎤' },
+            { text: '你是我的情歌', emoji: '🎼' },
+            { text: '想和你一起弹琴', emoji: '🎹' },
+            { text: '你是我的和弦', emoji: '🎸' }
+        ];
+
+        const heartEmojis = ['❤️', '💕', '💖', '💗', '💓', '💝', '💞', '💘'];
+        const heartBg = document.getElementById('heartBg');
+        
+        // 性能优化：使用对象池
+        const modalPool = new Set();
+        const MAX_MODALS = 15;
+
+        // 获取随机数（优化版）
+        const random = (min, max) => Math.random() * (max - min) + min;
+        const randomInt = (min, max) => Math.floor(random(min, max));
+        const randomItem = (arr) => arr[randomInt(0, arr.length)];
+
+        // 创建飘落的爱心（优化版）
+        function createHeart() {
+            const fragment = document.createDocumentFragment();
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = randomItem(heartEmojis);
+            heart.style.left = random(0, 100) + '%';
+            heart.style.animationDuration = random(4, 7) + 's';
+            heart.style.animationDelay = random(0, 2) + 's';
+            heart.style.fontSize = random(25, 45) + 'px';
+            
+            fragment.appendChild(heart);
+            heartBg.appendChild(fragment);
+
+            setTimeout(() => heart.remove(), 9000);
+        }
+
+        // 创建粒子光效（优化版）
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = random(0, 100) + '%';
+            sparkle.style.top = random(0, 100) + '%';
+            sparkle.style.animationDelay = random(0, 2) + 's';
+            
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 2000);
+        }
+
+        // 创建雪花式弹窗（优化版）
+        function createSnowModal() {
+            if (modalPool.size >= MAX_MODALS) return;
+
+            const message = randomItem(loveMessages);
+            const sizes = ['small', 'medium', 'large'];
+            const size = randomItem(sizes);
+            
+            // 计算位置（确保在屏幕内且不重叠）
+            const maxLeft = Math.max(window.innerWidth - 340, 50);
+            const maxTop = Math.max(window.innerHeight - 220, 50);
+            const left = random(10, maxLeft);
+            const top = random(10, maxTop);
+            const rotation = random(-8, 8);
+            
+            // 创建弹窗
+            const modal = document.createElement('div');
+            modal.className = 'snow-modal';
+            modal.style.left = left + 'px';
+            modal.style.top = top + 'px';
+            modal.style.transform = `rotate(${rotation}deg)`;
+            modal.style.zIndex = randomInt(1000, 1500);
+            
+            modal.innerHTML = `
+                <div class="modal-card ${size}">
+                    <div class="heart-deco top-left">💖</div>
+                    <div class="heart-deco bottom-right">💕</div>
+                    <div class="emoji-icon">${message.emoji}</div>
+                    <div class="love-text">${message.text}</div>
+                    <button class="close-btn" onclick="removeModal(this)">×</button>
+                </div>
+            `;
+            
+            modalPool.add(modal);
+            document.body.appendChild(modal);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                if (modal.parentElement) {
+                    modal.remove();
+                    modalPool.delete(modal);
+                }
+            }, 3000);
+        }
+
+        // 移除弹窗
+        window.removeModal = function(btn) {
+            const modal = btn.parentElement.parentElement;
+            modal.style.animation = 'snowFallOut 0.3s ease-out forwards';
+            setTimeout(() => {
+                modal.remove();
+                modalPool.delete(modal);
+            }, 300);
+        };
+
+        // 使用 requestAnimationFrame 优化背景效果
+        let lastHeartTime = 0;
+        let lastSparkleTime = 0;
+        const HEART_INTERVAL = 200;
+        const SPARKLE_INTERVAL = 300;
+
+        function animateBackground(timestamp) {
+            if (timestamp - lastHeartTime > HEART_INTERVAL) {
+                createHeart();
+                lastHeartTime = timestamp;
+            }
+            
+            if (timestamp - lastSparkleTime > SPARKLE_INTERVAL) {
+                createSparkle();
+                lastSparkleTime = timestamp;
+            }
+            
+            requestAnimationFrame(animateBackground);
+        }
+
+        // 启动雪花弹窗
+        function startSnowModals() {
+            // 初始快速创建
+            for (let i = 0; i < 8; i++) {
+                setTimeout(createSnowModal, i * 180);
+            }
+
+            // 持续创建
+            setInterval(() => {
+                const count = randomInt(2, 5);
+                for (let i = 0; i < count; i++) {
+                    setTimeout(createSnowModal, i * 100);
+                }
+            }, 600);
+        }
+
+        // 防止微信下拉刷新
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // 初始化
+        window.addEventListener('load', () => {
+            // 初始创建背景元素
+            for (let i = 0; i < 12; i++) {
+                setTimeout(createHeart, i * 120);
+                setTimeout(createSparkle, i * 180);
+            }
+            
+            // 启动动画循环
+            requestAnimationFrame(animateBackground);
+            
+            // 延迟启动弹窗
+            setTimeout(startSnowModals, 400);
+        });
+
+        // 页面可见性优化
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // 页面隐藏时暂停动画可以节省性能
+            }
+        });
+    </script>
+</body>
+</html>
