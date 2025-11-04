@@ -17,14 +17,12 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
             overflow: hidden;
-            background: linear-gradient(135deg, 
-                #667eea 0%, 
-                #764ba2 25%,
-                #f093fb 50%,
-                #4facfe 75%,
-                #667eea 100%);
-            background-size: 400% 400%;
-            animation: gradientFlow 15s ease infinite;
+            background: #f5e6d3;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             height: 100vh;
             width: 100vw;
             position: fixed;
@@ -32,13 +30,27 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        @keyframes gradientFlow {
-            0%, 100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
+        /* 背景遮罩层 - 让内容更清晰 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 182, 193, 0.3) 0%,
+                rgba(255, 218, 224, 0.2) 50%,
+                rgba(255, 240, 245, 0.3) 100%
+            );
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 确保背景层始终可见 */
+        html {
+            background: #f5e6d3;
         }
 
         /* 背景装饰层 */
@@ -47,8 +59,11 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: 0;
+            z-index: 1;
             pointer-events: none;
+            top: 0;
+            left: 0;
+            opacity: 0.6;
         }
 
         /* 背景星星 */
@@ -56,20 +71,21 @@
             position: absolute;
             width: 3px;
             height: 3px;
-            background: white;
+            background: rgba(255, 192, 203, 0.8);
             border-radius: 50%;
+            box-shadow: 0 0 6px rgba(255, 182, 193, 0.6);
             animation: twinkle 3s ease-in-out infinite;
             transform: translateZ(0);
         }
 
         @keyframes twinkle {
             0%, 100% {
-                opacity: 0.3;
+                opacity: 0.4;
                 transform: scale(1) translateZ(0);
             }
             50% {
                 opacity: 1;
-                transform: scale(1.5) translateZ(0);
+                transform: scale(1.8) translateZ(0);
             }
         }
 
@@ -77,17 +93,44 @@
         .circle {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
-            animation: floatCircle 8s ease-in-out infinite;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.15) 0%, rgba(255, 192, 203, 0) 70%);
+            animation: floatCircle 10s ease-in-out infinite;
             transform: translateZ(0);
+            box-shadow: 0 0 40px rgba(255, 182, 193, 0.3);
         }
 
         @keyframes floatCircle {
             0%, 100% {
                 transform: translate(0, 0) scale(1) translateZ(0);
+                opacity: 0.5;
             }
             50% {
-                transform: translate(30px, -30px) scale(1.2) translateZ(0);
+                transform: translate(40px, -40px) scale(1.3) translateZ(0);
+                opacity: 0.8;
+            }
+        }
+
+        /* 波浪效果 */
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 150px;
+            background: linear-gradient(to right, 
+                rgba(255, 192, 203, 0.15) 0%,
+                rgba(255, 182, 193, 0.08) 50%,
+                rgba(255, 192, 203, 0.15) 100%);
+            animation: wave 8s linear infinite;
+            transform: translateZ(0);
+        }
+
+        @keyframes wave {
+            0% {
+                transform: translateX(0) translateZ(0);
+            }
+            100% {
+                transform: translateX(-50%) translateZ(0);
             }
         }
 
@@ -97,17 +140,20 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: 0;
+            z-index: 2;
             pointer-events: none;
+            top: 0;
+            left: 0;
         }
 
         .heart {
             position: absolute;
-            font-size: 28px;
-            color: rgba(255, 255, 255, 0.4);
+            font-size: 30px;
+            color: rgba(255, 105, 180, 0.7);
             animation: float 5s linear infinite;
             transform: translateZ(0);
-            text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+            text-shadow: 0 0 12px rgba(255, 20, 147, 0.6);
+            filter: drop-shadow(0 0 6px rgba(255, 105, 180, 0.5));
         }
 
         @keyframes float {
@@ -137,6 +183,11 @@
                 snowFallIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
                 snowFallOut 0.4s ease-out 2.6s forwards;
         }
+        
+        /* 确保弹窗层级正确 */
+        body > * {
+            position: relative;
+        }
 
         @keyframes snowFallIn {
             0% {
@@ -163,22 +214,22 @@
         /* 弹窗卡片 - 手机端优化 */
         .modal-card {
             background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.95) 0%, 
-                rgba(255, 245, 250, 0.95) 50%,
-                rgba(255, 250, 250, 0.95) 100%);
+                rgba(255, 255, 255, 0.92) 0%, 
+                rgba(255, 240, 245, 0.92) 50%,
+                rgba(255, 245, 250, 0.92) 100%);
             border-radius: 16px;
             padding: 18px 20px;
             box-shadow: 
-                0 8px 24px rgba(0, 0, 0, 0.25),
-                0 0 20px rgba(255, 107, 157, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                0 8px 24px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(255, 182, 193, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
             max-width: 240px;
             min-width: 180px;
             position: relative;
-            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            border: 1.5px solid rgba(255, 192, 203, 0.4);
             transform: translateZ(0);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         /* 不同大小 - 手机优化 */
@@ -481,15 +532,23 @@
         function createCircle() {
             const circle = document.createElement('div');
             circle.className = 'circle';
-            const size = random(100, 200);
+            const size = random(120, 250);
             circle.style.width = size + 'px';
             circle.style.height = size + 'px';
-            circle.style.left = random(-50, 100) + '%';
-            circle.style.top = random(-50, 100) + '%';
+            circle.style.left = random(-20, 80) + '%';
+            circle.style.top = random(-20, 80) + '%';
             circle.style.animationDelay = random(0, 5) + 's';
-            circle.style.animationDuration = random(6, 10) + 's';
+            circle.style.animationDuration = random(8, 12) + 's';
             
             bgDecoration.appendChild(circle);
+        }
+
+        // 创建波浪
+        function createWave() {
+            const wave = document.createElement('div');
+            wave.className = 'wave';
+            wave.style.animationDelay = random(0, 3) + 's';
+            bgDecoration.appendChild(wave);
         }
 
         // 创建爱心
@@ -602,21 +661,29 @@
 
         // 初始化
         window.addEventListener('load', () => {
+            // 强制确保背景可见
+            document.body.style.backgroundColor = '#f5e6d3';
+            
             // 创建背景星星（固定位置）
-            const starCount = isMobile ? 20 : 30;
+            const starCount = isMobile ? 30 : 50;
             for (let i = 0; i < starCount; i++) {
                 createStar();
             }
             
             // 创建浮动圆圈
-            const circleCount = isMobile ? 3 : 5;
+            const circleCount = isMobile ? 5 : 8;
             for (let i = 0; i < circleCount; i++) {
                 createCircle();
             }
             
+            // 创建波浪
+            for (let i = 0; i < 2; i++) {
+                createWave();
+            }
+            
             // 初始创建爱心
-            for (let i = 0; i < 5; i++) {
-                setTimeout(createHeart, i * 200);
+            for (let i = 0; i < 8; i++) {
+                setTimeout(createHeart, i * 150);
             }
             
             // 延迟启动弹窗
